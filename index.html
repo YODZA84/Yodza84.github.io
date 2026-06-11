@@ -1,44 +1,359 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loading...</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            height: 100vh;
-        }
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Arkanis Security — Protection · Vigilance · Excellence</title>
+<meta name="description" content="Arkanis Security — société privée spécialisée dans la protection des biens, des infrastructures et des personnes." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+<style>
+  :root, [data-theme="dark"] {
+    --bg: #05070b; --bg-2: #0a0e15; --panel: #0d1220;
+    --silver: #c8ccd1; --silver-soft: #8a9099;
+    --blue: #1f6bd6; --blue-bright: #3b8eff; --blue-glow: rgba(59, 142, 255, 0.35);
+    --line: rgba(200, 204, 209, 0.12); --text: #e6e8ec;
+    --grid-color: rgba(200, 204, 209, 0.04);
+    --nav-bg: rgba(5, 7, 11, 0.75);
+  }
+  [data-theme="light"] {
+    --bg: #f4f5f7; --bg-2: #ffffff; --panel: #eef0f3;
+    --silver: #1a2332; --silver-soft: #5a6273;
+    --blue: #1f6bd6; --blue-bright: #2563eb; --blue-glow: rgba(37, 99, 235, 0.28);
+    --line: rgba(26, 35, 50, 0.12); --text: #1a2332;
+    --grid-color: rgba(26, 35, 50, 0.05);
+    --nav-bg: rgba(244, 245, 247, 0.85);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text);
+    line-height: 1.7; -webkit-font-smoothing: antialiased;
+    transition: background 0.5s ease, color 0.5s ease;
+  }
+  ::selection { background: var(--blue); color: #fff; }
+  a { color: inherit; text-decoration: none; }
+  .container { max-width: 1240px; margin: 0 auto; padding: 0 32px; position: relative; z-index: 2; }
+
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; backdrop-filter: blur(18px); background: var(--nav-bg); border-bottom: 1px solid var(--line); transition: background 0.5s; }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 16px 32px; max-width: 1240px; margin: 0 auto; }
+  .nav-brand { display: flex; align-items: center; gap: 12px; font-family: 'Cinzel', serif; font-weight: 700; letter-spacing: 0.18em; font-size: 14px; color: var(--silver); }
+  .nav-brand img { height: 34px; transition: transform 0.5s; }
+  .nav-brand:hover img { transform: rotate(-8deg) scale(1.08); }
+  .nav-links { display: flex; gap: 32px; }
+  .nav-links a { color: var(--silver-soft); font-size: 13px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; transition: color 0.3s; position: relative; }
+  .nav-links a::after { content: ''; position: absolute; bottom: -6px; left: 0; width: 0; height: 1px; background: var(--blue-bright); transition: width 0.35s; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-links a:hover::after { width: 100%; }
+  .theme-toggle { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: var(--bg-2); color: var(--silver); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.4s; }
+  .theme-toggle:hover { border-color: var(--blue-bright); color: var(--blue-bright); transform: rotate(20deg) scale(1.1); box-shadow: 0 0 20px var(--blue-glow); }
+  @media (max-width: 768px) { .nav-links { display: none; } }
+
+  /* HERO */
+  .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; padding: 140px 32px 80px; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 40%, var(--blue-glow) 0%, transparent 55%), radial-gradient(ellipse at 80% 90%, rgba(31,107,214,0.08) 0%, transparent 50%); }
+  .hero-grid { position: absolute; inset: 0; background-image: linear-gradient(var(--grid-color) 1px, transparent 1px), linear-gradient(90deg, var(--grid-color) 1px, transparent 1px); background-size: 80px 80px; mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%); animation: gridShift 30s linear infinite; }
+  @keyframes gridShift { from { background-position: 0 0; } to { background-position: 80px 80px; } }
+  .hero::before, .hero::after { content: ''; position: absolute; width: 6px; height: 6px; background: var(--blue-bright); border-radius: 50%; box-shadow: 0 0 20px var(--blue-bright); animation: floatP 8s ease-in-out infinite; }
+  .hero::before { top: 20%; left: 15%; }
+  .hero::after { bottom: 25%; right: 18%; animation-delay: 4s; }
+  @keyframes floatP { 0%,100% { transform: translate(0,0); opacity: 0.4; } 50% { transform: translate(40px,-30px); opacity: 1; } }
+  .hero-content { text-align: center; z-index: 2; position: relative; max-width: 880px; }
+  .hero-logo { width: 200px; margin: 0 auto 32px; filter: drop-shadow(0 0 40px var(--blue-glow)); animation: float 6s ease-in-out infinite, fadeUp 1.2s ease both; }
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .hero-tagline { font-size: 12px; letter-spacing: 0.5em; color: var(--blue-bright); text-transform: uppercase; margin-bottom: 24px; animation: fadeUp 1.2s 0.2s ease both; }
+  .hero h1 { font-family: 'Cinzel', serif; font-weight: 700; font-size: clamp(2.5rem, 6vw, 4.5rem); letter-spacing: 0.08em; color: var(--silver); line-height: 1.1; margin-bottom: 28px; animation: fadeUp 1.2s 0.4s ease both; }
+  .hero h1 span { display: block; background: linear-gradient(180deg, var(--text), var(--silver-soft)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero p { font-size: 18px; color: var(--silver-soft); max-width: 620px; margin: 0 auto 40px; animation: fadeUp 1.2s 0.6s ease both; }
+  .btn-primary { display: inline-flex; align-items: center; gap: 12px; padding: 16px 36px; background: var(--blue); color: #fff; text-decoration: none; font-size: 13px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; transition: all 0.4s; animation: fadeUp 1.2s 0.8s ease both; }
+  .btn-primary:hover { background: var(--blue-bright); box-shadow: 0 12px 30px var(--blue-glow); transform: translateY(-3px); }
+
+  /* STATS */
+  .stats { padding: 100px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--bg-2); position: relative; overflow: hidden; }
+  .stats::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, var(--blue-glow), transparent); height: 1px; top: 0; animation: scan 4s linear infinite; }
+  @keyframes scan { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; }
+  .stat { text-align: center; padding: 30px; border-left: 1px solid var(--line); }
+  .stat:first-child { border-left: none; }
+  .stat-num { font-family: 'Cinzel', serif; font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 700; background: linear-gradient(180deg, var(--blue-bright), var(--blue)); -webkit-background-clip: text; background-clip: text; color: transparent; line-height: 1; margin-bottom: 12px; }
+  .stat-label { color: var(--silver-soft); font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; }
+  @media (max-width: 768px) { .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; } .stat { border-left: none; padding: 24px 12px; } }
+
+  /* SECTIONS */
+  section { padding: 140px 0; position: relative; }
+  .section-label { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.5em; color: var(--blue-bright); text-transform: uppercase; margin-bottom: 18px; display: inline-block; }
+  .section-title { font-family: 'Cinzel', serif; font-weight: 600; font-size: clamp(2rem, 4vw, 3rem); letter-spacing: 0.06em; color: var(--silver); margin-bottom: 28px; line-height: 1.2; }
+  .section-divider { width: 60px; height: 1px; background: linear-gradient(90deg, var(--blue-bright), transparent); margin-bottom: 32px; }
+
+  /* SERVICES */
+  .services { background: var(--bg-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .services-header { text-align: center; margin-bottom: 80px; }
+  .services-header .section-divider { margin: 32px auto 0; }
+  .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .service { background: var(--bg-2); padding: 48px 36px; position: relative; transition: all 0.5s cubic-bezier(0.4,0,0.2,1); cursor: default; }
+  .service:hover { background: var(--panel); transform: translateY(-4px); }
+  .service-icon { width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--line); margin-bottom: 28px; color: var(--blue-bright); font-size: 20px; transition: all 0.5s cubic-bezier(0.4,0,0.2,1); }
+  .service:hover .service-icon { border-color: var(--blue-bright); box-shadow: 0 0 30px var(--blue-glow); transform: rotate(-8deg) scale(1.1); background: var(--blue); color: #fff; }
+  .service-num { position: absolute; top: 24px; right: 28px; font-family: 'Cinzel', serif; font-size: 11px; color: var(--silver-soft); letter-spacing: 0.2em; }
+  .service h3 { font-family: 'Cinzel', serif; font-weight: 600; font-size: 16px; letter-spacing: 0.08em; color: var(--silver); margin-bottom: 14px; text-transform: uppercase; }
+  .service p { color: var(--silver-soft); font-size: 14px; }
+
+  /* VALEURS */
+  .values-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 80px; align-items: start; }
+  .value-item { display: flex; align-items: center; gap: 32px; padding: 28px 0; border-bottom: 1px solid var(--line); transition: all 0.4s; position: relative; }
+  .value-item::before { content: ''; position: absolute; left: 0; top: 50%; width: 0; height: 2px; background: var(--blue-bright); transform: translateY(-50%); transition: width 0.4s; }
+  .value-item:hover { padding-left: 28px; }
+  .value-item:hover::before { width: 16px; }
+  .value-item:last-child { border-bottom: none; }
+  .value-number { font-family: 'Cinzel', serif; font-size: 14px; color: var(--blue-bright); letter-spacing: 0.2em; min-width: 40px; }
+  .value-name { font-family: 'Cinzel', serif; font-size: 22px; letter-spacing: 0.1em; color: var(--silver); text-transform: uppercase; flex: 1; transition: color 0.4s; }
+  .value-item:hover .value-name { color: var(--blue-bright); }
+  .value-item i { color: var(--silver-soft); transition: all 0.4s; }
+  .value-item:hover i { transform: translateX(8px); color: var(--blue-bright); }
+  @media (max-width: 900px) { .values-grid { grid-template-columns: 1fr; gap: 40px; } }
+
+  /* SPLIT */
+  .split { background: var(--bg-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .split-grid { display: grid; grid-template-columns: 1fr 1fr; }
+  .split-block { padding: 100px 60px; }
+  .split-block:first-child { border-right: 1px solid var(--line); }
+  .split-block p { color: var(--silver-soft); margin-bottom: 18px; }
+  .split-block ul { list-style: none; margin-top: 24px; }
+  .split-block ul li { color: var(--silver-soft); padding: 10px 0 10px 24px; position: relative; }
+  .split-block ul li::before { content: ''; position: absolute; left: 0; top: 20px; width: 12px; height: 1px; background: var(--blue-bright); }
+  .quote { font-family: 'Cinzel', serif; font-style: italic; font-size: 20px; line-height: 1.6; color: var(--silver); padding: 28px 0 28px 28px; border-left: 2px solid var(--blue-bright); margin: 32px 0; }
+  @media (max-width: 900px) { .split-grid { grid-template-columns: 1fr; } .split-block { padding: 60px 32px; } .split-block:first-child { border-right: none; border-bottom: 1px solid var(--line); } }
+
+  /* SIEGE */
+  .siege { text-align: center; padding: 120px 0; }
+  .siege-box { max-width: 720px; margin: 0 auto; padding: 60px 40px; border: 1px solid var(--line); position: relative; background: var(--bg-2); }
+  .siege-box::before, .siege-box::after { content: ''; position: absolute; width: 20px; height: 20px; border: 1px solid var(--blue-bright); }
+  .siege-box::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+  .siege-box::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+  .siege i { font-size: 24px; color: var(--blue-bright); margin-bottom: 20px; }
+  .siege h3 { font-family: 'Cinzel', serif; font-size: 20px; letter-spacing: 0.1em; color: var(--silver); text-transform: uppercase; margin-bottom: 16px; }
+  .siege p { color: var(--silver-soft); font-size: 15px; }
+
+  /* FOOTER */
+  footer { background: var(--bg-2); padding: 80px 0 40px; border-top: 1px solid var(--line); }
+  [data-theme="dark"] footer { background: #03050a; }
+  .footer-inner { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 60px; margin-bottom: 60px; }
+  .footer-brand img { height: 70px; margin-bottom: 20px; }
+  .footer-brand p { color: var(--silver-soft); font-size: 14px; max-width: 360px; }
+  .footer-col h4 { font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 0.3em; color: var(--silver); text-transform: uppercase; margin-bottom: 20px; }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { padding: 8px 0; }
+  .footer-col ul li a { color: var(--silver-soft); font-size: 14px; transition: color 0.3s; }
+  .footer-col ul li a:hover { color: var(--blue-bright); }
+  .footer-bottom { padding-top: 32px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; color: var(--silver-soft); font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; }
+  @media (max-width: 768px) { .footer-inner { grid-template-columns: 1fr; gap: 40px; } .footer-bottom { flex-direction: column; gap: 16px; text-align: center; } }
+
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.9s cubic-bezier(0.4,0,0.2,1), transform 0.9s cubic-bezier(0.4,0,0.2,1); }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
 </head>
 <body>
-    <iframe id="contentFrame" src="https://app.emergent.sh/loading-preview?host=secure-vigilance.preview.emergentagent.com" allowfullscreen></iframe>
-    <script>
-        // Listen for messages from the iframe
-        window.addEventListener('message', function(event) {
 
-        	console.log(event.origin);
-            // Optional: Add origin check for security
-            // if (!['https://dev.emergentagent.com', 'https://app.emergent.sh'].includes(event.origin)) return;
+<nav>
+  <div class="nav-inner">
+    <a href="#top" class="nav-brand">
+      <img src="https://customer-assets.emergentagent.com/job_62d5e6b4-7add-41c5-be64-fcfb9b6ba8c5/artifacts/2xh5bqx9_f4a7eb9f-e8a7-489d-9bb7-c5310c1cacc5.png" alt="Arkanis" />
+      <span>ARKANIS</span>
+    </a>
+    <div class="nav-links">
+      <a href="#presentation">Présentation</a>
+      <a href="#services">Services</a>
+      <a href="#valeurs">Valeurs</a>
+      <a href="#recrutement">Recrutement</a>
+      <a href="#fondateur">Fondateur</a>
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn"><i class="fa-solid fa-sun"></i></button>
+  </div>
+</nav>
 
-            if (event.data && event.data.type === 'reload') {
-                const iframe = document.getElementById('contentFrame');
-                window.location.reload();
-            }
+<header class="hero" id="top">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <img class="hero-logo" src="https://customer-assets.emergentagent.com/job_62d5e6b4-7add-41c5-be64-fcfb9b6ba8c5/artifacts/2xh5bqx9_f4a7eb9f-e8a7-489d-9bb7-c5310c1cacc5.png" alt="Arkanis Security" />
+    <div class="hero-tagline">Protection · Vigilance · Excellence</div>
+    <h1>ARKANIS<span>SECURITY</span></h1>
+    <p>Société privée spécialisée dans la protection des biens, des infrastructures et des personnes. Une présence dissuasive, une vigilance permanente, une intervention rapide.</p>
+    <a href="#services" class="btn-primary">Découvrir nos services <i class="fa-solid fa-arrow-right"></i></a>
+  </div>
+</header>
 
-            if (event.data && event.data.type === 'url') {
-                const iframe = document.getElementById('contentFrame');
-                window.open(event.data.url, '_blank');
-            }
-        });
-    </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a097e4bbeb52f015',t:'MTc4MTA4OTQ0OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"7f7b0fd8732c4326aae4b9d58d5c514a","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+<section class="stats">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat reveal"><div class="stat-num" data-count="24" data-suffix="/7">0</div><div class="stat-label">Disponibilité</div></div>
+      <div class="stat reveal"><div class="stat-num" data-count="100" data-suffix="%">0</div><div class="stat-label">Engagement</div></div>
+      <div class="stat reveal"><div class="stat-num" data-count="7">0</div><div class="stat-label">Domaines</div></div>
+      <div class="stat reveal"><div class="stat-num" data-count="5">0</div><div class="stat-label">Valeurs</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="presentation">
+  <div class="container">
+    <div class="reveal" style="max-width:760px">
+      <span class="section-label">— L'Entreprise</span>
+      <h2 class="section-title">Une référence en sécurité privée</h2>
+      <div class="section-divider"></div>
+      <p style="color:var(--silver-soft); margin-bottom:20px">Arkanis Security est une société privée spécialisée dans la protection des biens, des infrastructures et des personnes. Fondée pour répondre aux besoins croissants en matière de sécurité, notre entreprise met à disposition des professionnels qualifiés et des solutions adaptées à chaque situation.</p>
+      <p style="color:var(--silver-soft)">Notre mission : garantir un environnement sûr grâce à une présence dissuasive, une vigilance permanente et une capacité d'intervention rapide.</p>
+    </div>
+  </div>
+</section>
+
+<section id="services" class="services">
+  <div class="container">
+    <div class="services-header reveal">
+      <span class="section-label">— Nos Prestations</span>
+      <h2 class="section-title">Sept domaines d'expertise</h2>
+      <div class="section-divider"></div>
+    </div>
+    <div class="services-grid" id="servicesGrid"></div>
+  </div>
+</section>
+
+<section id="valeurs">
+  <div class="container">
+    <div class="values-grid">
+      <div class="reveal">
+        <span class="section-label">— Notre ADN</span>
+        <h2 class="section-title">Cinq valeurs immuables</h2>
+        <div class="section-divider"></div>
+        <p style="color:var(--silver-soft)">Chaque agent représente l'image de l'entreprise et s'engage à fournir un service exemplaire en toutes circonstances.</p>
+      </div>
+      <div class="values-list reveal" id="valuesList"></div>
+    </div>
+  </div>
+</section>
+
+<section class="split">
+  <div class="split-grid">
+    <div class="split-block reveal" id="recrutement">
+      <span class="section-label">— Rejoindre nos rangs</span>
+      <h2 class="section-title">Recrutement</h2>
+      <div class="section-divider"></div>
+      <p>Arkanis Security recherche régulièrement de nouveaux agents motivés, sérieux et prêts à s'investir.</p>
+      <p>Les candidats doivent faire preuve de :</p>
+      <ul>
+        <li>Maturité et sens des responsabilités</li>
+        <li>Excellent sens de la communication</li>
+        <li>Esprit d'équipe irréprochable</li>
+        <li>Engagement et discrétion absolue</li>
+      </ul>
+    </div>
+    <div class="split-block reveal" id="fondateur">
+      <span class="section-label">— Vision</span>
+      <h2 class="section-title">Mot du fondateur</h2>
+      <div class="section-divider"></div>
+      <p>Arkanis Security est construit autour d'une vision claire : devenir une référence dans le domaine de la sécurité privée.</p>
+      <div class="quote">"Bâtir une entreprise fiable, respectée et reconnue pour la qualité de ses prestations."</div>
+      <p>Notre objectif : développer une structure exigeante, à la hauteur des défis sécuritaires d'aujourd'hui et de demain.</p>
+    </div>
+  </div>
+</section>
+
+<section class="siege">
+  <div class="container">
+    <div class="siege-box reveal">
+      <i class="fa-solid fa-location-dot"></i>
+      <h3>Siège Social</h3>
+      <p>L'adresse du siège social est actuellement en cours de définition et sera communiquée prochainement.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="https://customer-assets.emergentagent.com/job_62d5e6b4-7add-41c5-be64-fcfb9b6ba8c5/artifacts/2xh5bqx9_f4a7eb9f-e8a7-489d-9bb7-c5310c1cacc5.png" alt="Arkanis" />
+        <p>Protection des biens, des infrastructures et des personnes.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="#presentation">Présentation</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#valeurs">Valeurs</a></li>
+          <li><a href="#recrutement">Recrutement</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Société</h4>
+        <ul>
+          <li><a href="#fondateur">Mot du fondateur</a></li>
+          <li><a href="#top">Siège social</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© Arkanis Security — Tous droits réservés</span>
+      <span>Protection · Vigilance · Excellence</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Theme toggle
+  const saved = localStorage.getItem('arkanis_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', saved);
+  document.getElementById('themeBtn').innerHTML = saved === 'dark' ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+  function toggleTheme() {
+    const cur = document.documentElement.getAttribute('data-theme');
+    const next = cur === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('arkanis_theme', next);
+    document.getElementById('themeBtn').innerHTML = next === 'dark' ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+  }
+
+  // Services
+  const services = [
+    ['shield-halved', 'Surveillance & Gardiennage', 'Protection continue des sites privés et publics.'],
+    ['id-badge', "Contrôle d'accès", 'Filtrage rigoureux et gestion des entrées sensibles.'],
+    ['calendar-check', "Sécurisation d'événements", 'Dispositifs sur mesure pour vos rassemblements.'],
+    ['route', 'Rondes de prévention', 'Patrouilles dissuasives et inspections régulières.'],
+    ['user-shield', 'Protection rapprochée', 'Garde du corps pour personnalités et VIP.'],
+    ['truck-fast', 'Sécurisation de convois', 'Escorte et protection des transports sensibles.'],
+    ['chess-knight', 'Conseil & Gestion des risques', 'Audits et plans de sécurité adaptés.'],
+  ];
+  document.getElementById('servicesGrid').innerHTML = services.map((s,i)=>`<div class="service reveal"><div class="service-num">${String(i+1).padStart(2,'0')}</div><div class="service-icon"><i class="fa-solid fa-${s[0]}"></i></div><h3>${s[1]}</h3><p>${s[2]}</p></div>`).join('');
+
+  // Values
+  const values = ['Discipline', 'Professionnalisme', 'Discrétion', 'Réactivité', 'Respect'];
+  document.getElementById('valuesList').innerHTML = values.map((v,i)=>`<div class="value-item"><span class="value-number">${['I','II','III','IV','V'][i]}</span><span class="value-name">${v}</span><i class="fa-solid fa-arrow-right"></i></div>`).join('');
+
+  // Reveal on scroll
+  const obs = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } }), { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  // Counters
+  const counterObs = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    const el = e.target;
+    const target = +el.dataset.count;
+    const suffix = el.dataset.suffix || '';
+    const start = performance.now();
+    const tick = now => {
+      const p = Math.min(1, (now - start) / 1800);
+      el.textContent = Math.floor(target * (1 - Math.pow(1 - p, 3))) + suffix;
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+    counterObs.unobserve(el);
+  }), { threshold: 0.4 });
+  document.querySelectorAll('[data-count]').forEach(el => counterObs.observe(el));
+</script>
+
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"7f7b0fd8732c4326aae4b9d58d5c514a","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
