@@ -193,6 +193,13 @@
     font-size:13px; opacity:0; transition:all .25s; z-index:60; pointer-events:none;
   }
   #toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+  .ct-input, .ct-select, .ct-textarea{
+    width:100%; background:var(--bg-panel-2); border:1px solid var(--line); border-radius:6px;
+    padding:6px 8px; color:var(--white); font-family:'Inter',sans-serif; font-size:12.5px; resize:vertical;
+  }
+  .ct-input:focus, .ct-select:focus, .ct-textarea:focus{outline:none; border-color:var(--blue);}
+  #controlTable td{padding:5px 8px; vertical-align:top; border-bottom:1px solid var(--line);}
+  .ct-del{background:none; border:none; color:var(--red); cursor:pointer; font-size:16px; padding:4px;}
   @media(max-width:640px){ .row2{grid-template-columns:1fr;} .hero-inner{flex-wrap:wrap;} }
 </style>
 </head>
@@ -219,6 +226,7 @@
   <div class="chip" data-filter="todo">⚪ À tester</div>
   <button class="btn-ghost" id="exportBtn">Exporter JSON</button>
   <button class="btn-ghost" id="loginBtn">🔒 Connexion admin</button>
+  <button class="btn-ghost" id="controlBtn" style="display:none;">🎛️ Centre de contrôle</button>
   <button class="btn-primary" id="addBtn" style="display:none;">+ Nouveau test</button>
 </div>
 <div id="adminBar" style="display:none; padding:8px 6vw 0; font-size:12px; color:var(--green);">
@@ -293,6 +301,37 @@
   </div>
 </div>
 
+<div class="overlay" id="controlOverlay">
+  <div class="modal" style="max-width:1100px;">
+    <h2 class="display">Centre de contrôle</h2>
+    <p style="color:var(--muted); font-size:13px; margin-top:-10px;">Tout ce qui a été créé est modifiable ici, ligne par ligne. Change ce que tu veux, puis clique "Enregistrer tout" en bas.</p>
+    <div style="overflow-x:auto; margin:14px 0;">
+      <table id="controlTable" style="width:100%; border-collapse:collapse; font-size:12.5px;">
+        <thead>
+          <tr style="text-align:left; color:var(--muted); text-transform:uppercase; font-size:10.5px; letter-spacing:.05em;">
+            <th style="padding:6px 8px; min-width:150px;">Nom</th>
+            <th style="padding:6px 8px; min-width:110px;">Catégorie</th>
+            <th style="padding:6px 8px; min-width:90px;">Version</th>
+            <th style="padding:6px 8px; min-width:120px;">Statut</th>
+            <th style="padding:6px 8px; min-width:180px;">Fonctionne</th>
+            <th style="padding:6px 8px; min-width:180px;">Problèmes</th>
+            <th style="padding:6px 8px; min-width:180px;">Notes</th>
+            <th style="padding:6px 8px;"></th>
+          </tr>
+        </thead>
+        <tbody id="controlTableBody"></tbody>
+      </table>
+    </div>
+    <div class="modal-actions" style="justify-content:space-between;">
+      <button class="btn-ghost" id="controlAddRowBtn">+ Ajouter une ligne</button>
+      <div style="display:flex; gap:10px;">
+        <button class="btn-ghost" id="controlCloseBtn">Fermer</button>
+        <button class="btn-primary" id="controlSaveBtn">Enregistrer tout</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
@@ -348,10 +387,13 @@ async function save(){
   }
 }
 
+const SESSION_KEY = 'plutonium-admin-session';
+
 function applyAdminUI(){
   document.getElementById('addBtn').style.display = isAdmin ? 'flex' : 'none';
   document.getElementById('adminBar').style.display = isAdmin ? 'block' : 'none';
   document.getElementById('loginBtn').style.display = isAdmin ? 'none' : 'inline-block';
+  document.getElementById('controlBtn').style.display = isAdmin ? 'inline-block' : 'none';
   render();
 }
 
@@ -372,18 +414,91 @@ document.getElementById('loginSubmitBtn').addEventListener('click', ()=>{
   const pass = document.getElementById('login-pass').value.trim();
   if(email === ADMIN_EMAIL && pass === ADMIN_PASS){
     isAdmin = true;
+    try{ localStorage.setItem(SESSION_KEY, '1'); }catch(e){}
     document.getElementById('loginOverlay').classList.remove('show');
     applyAdminUI();
-    toast('Connecté en admin');
+    toast('Connecté en admin — tu resteras connecté sur ce navigateur');
   } else {
     document.getElementById('loginError').style.display = 'block';
   }
 });
 document.getElementById('logoutBtn').addEventListener('click', ()=>{
   isAdmin = false;
+  try{ localStorage.removeItem(SESSION_KEY); }catch(e){}
   applyAdminUI();
   toast('Déconnecté');
 });
+
+// ---------- Centre de contrôle ----------
+function openControlPanel(){
+  const body = document.getElementById('controlTableBody');
+  body.innerHTML = entries.map(e => controlRowHtml(e)).join('');
+  document.getElementById('controlOverlay').classList.add('show');
+}
+
+function controlRowHtml(e){
+  const statuses = ['ok','partial','broken','todo'];
+  const labels = {ok:'✅ Fonctionne', partial:'🟡 Partiel', broken:'🔴 Cassé', todo:'⚪ À tester'};
+  return `
+    <tr data-id="${e.id}">
+      <td><input class="ct-input ct-name" value="${escapeAttr(e.name)}"></td>
+      <td><input class="ct-input ct-category" value="${escapeAttr(e.category||'')}"></td>
+      <td><input class="ct-input ct-version" value="${escapeAttr(e.version||'')}"></td>
+      <td><select class="ct-select ct-status">
+        ${statuses.map(s=>`<option value="${s}" ${e.status===s?'selected':''}>${labels[s]}</option>`).join('')}
+      </select></td>
+      <td><textarea class="ct-textarea ct-works" rows="2">${escapeAttr(e.works||'')}</textarea></td>
+      <td><textarea class="ct-textarea ct-broken" rows="2">${escapeAttr(e.broken||'')}</textarea></td>
+      <td><textarea class="ct-textarea ct-notes" rows="2">${escapeAttr(e.notes||'')}</textarea></td>
+      <td><button class="ct-del" title="Supprimer cette ligne" onclick="this.closest('tr').remove()">✕</button></td>
+    </tr>`;
+}
+
+function escapeAttr(s){
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+document.getElementById('controlBtn').addEventListener('click', ()=>{ if(isAdmin) openControlPanel(); });
+document.getElementById('controlCloseBtn').addEventListener('click', ()=>{
+  document.getElementById('controlOverlay').classList.remove('show');
+});
+document.getElementById('controlOverlay').addEventListener('click', e=>{
+  if(e.target.id === 'controlOverlay') document.getElementById('controlOverlay').classList.remove('show');
+});
+document.getElementById('controlAddRowBtn').addEventListener('click', ()=>{
+  const body = document.getElementById('controlTableBody');
+  const blank = { id: uid(), name:'', category:'', version:'', status:'todo', works:'', broken:'', notes:'' };
+  body.insertAdjacentHTML('beforeend', controlRowHtml(blank));
+});
+document.getElementById('controlSaveBtn').addEventListener('click', async ()=>{
+  if(!isAdmin){ toast('Connecte-toi en admin'); return; }
+  const rows = document.querySelectorAll('#controlTableBody tr');
+  const updated = [];
+  rows.forEach(row=>{
+    const id = row.dataset.id;
+    const name = row.querySelector('.ct-name').value.trim();
+    if(!name) return; // ignore lignes vides
+    const existing = entries.find(x=>x.id===id);
+    updated.push({
+      id,
+      name,
+      category: row.querySelector('.ct-category').value.trim(),
+      version: row.querySelector('.ct-version').value.trim(),
+      status: row.querySelector('.ct-status').value,
+      works: row.querySelector('.ct-works').value.trim(),
+      broken: row.querySelector('.ct-broken').value.trim(),
+      notes: row.querySelector('.ct-notes').value.trim(),
+      created: existing ? existing.created : Date.now(),
+      updated: Date.now()
+    });
+  });
+  entries = updated;
+  await save();
+  render();
+  document.getElementById('controlOverlay').classList.remove('show');
+  toast('Tout a été enregistré');
+});
+
 
 function statusLabel(s){
   return {ok:'✅ Fonctionne', partial:'🟡 Partiel', broken:'🔴 Cassé', todo:'⚪ À tester'}[s] || s;
@@ -548,6 +663,7 @@ document.getElementById('exportBtn').addEventListener('click', ()=>{
   URL.revokeObjectURL(url);
 });
 
+try{ isAdmin = localStorage.getItem(SESSION_KEY) === '1'; }catch(e){ isAdmin = false; }
 applyAdminUI();
 load();
 </script>
