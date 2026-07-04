@@ -316,9 +316,26 @@ function toast(msg){
 async function load(){
   try{
     const raw = localStorage.getItem(STORAGE_KEY);
-    entries = raw ? JSON.parse(raw) : [];
+    entries = raw ? JSON.parse(raw) : null;
   }catch(e){
-    entries = [];
+    entries = null;
+  }
+  if(!entries){
+    entries = [
+      {
+        id: uid(),
+        name: "ExempleCheat CE (démo)",
+        category: "Combat",
+        version: "1.21.50",
+        status: "broken",
+        works: "Le menu s'ouvre correctement en jeu.",
+        broken: "Crash au bout de 30 secondes d'utilisation, détecté immédiatement par l'anti-cheat du serveur.",
+        notes: "Ceci est un exemple pré-rempli pour montrer le format. Tu peux le modifier ou le supprimer une fois connecté en admin.",
+        created: Date.now(),
+        updated: Date.now()
+      }
+    ];
+    await save();
   }
   render();
 }
